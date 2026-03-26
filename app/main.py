@@ -1,11 +1,12 @@
-﻿from fastapi import FastAPI
-from datetime import date
+﻿from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+from . import db, models
 
 app = FastAPI()
 
-@app.get("/info")
-async def get_info():
-    today = date.today()
-    next_new_year = date(today.year + 1, 1, 1)
-    days_left = (next_new_year - today).days
-    return {"days_before_new_year": days_left}
+# Создаём таблицы
+db.Base.metadata.create_all(bind=db.engine)
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
