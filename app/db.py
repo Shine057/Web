@@ -1,23 +1,31 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+import os
 import time
-from sqlalchemy.exc import OperationalError
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "postgresql://postgres:postgres@db:5432/mydb"
+# 📌 Получаем переменные окружения (из docker-compose)
+DB_USER = os.getenv("DB_USER", "student")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "student")
+DB_HOST = os.getenv("DB_HOST", "postgres")  # ВАЖНО: postgres для Docker
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "lab2")
 
-# Попытка подключения с ожиданием
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+# ⏳ Ожидание запуска БД
 for i in range(10):
     try:
-        engine = create_engine(DATABASE_URL, echo=True)
-        engine.connect()
-        print("✅ Connected to DB")
+        engine = create_engine(DATABASE_URL)
+        connection = engine.connect()
+        connection.close()
+        print("✅ Connected to DB!")
         break
-    except OperationalError:
+    except Exception:
         print("⏳ Waiting for DB...")
         time.sleep(2)
 else:
     raise Exception("❌ Cannot connect to DB after 10 attempts")
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# 📦 ORM
+SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()

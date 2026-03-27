@@ -1,29 +1,28 @@
-﻿version: "3.9"
+﻿services:
+  fastapi_app:
+    build: .
+    ports:
+      - "4200:8000"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: web_db
+      POSTGRES_HOST: postgres_db
+      POSTGRES_PORT: 5432
+    depends_on:
+      - postgres_db
 
-services:
-  db:
-    image: postgres:15
-    container_name: web-db
+  postgres_db:
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydb
+      POSTGRES_DB: web_db
     ports:
       - "5432:5432"
     volumes:
-      - web_db_data:/var/lib/postgresql/data
-
-  web:
-    build: .
-    container_name: web-web
-    depends_on:
-      - db
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
-    command: ["./wait-for-it.sh", "db:5432", "--timeout=30", "--strict", "--", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+      - web_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  web_db_data:
+  web_postgres_data:
