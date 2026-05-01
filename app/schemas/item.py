@@ -1,7 +1,7 @@
-# app/schemas/item.py
 from typing import Optional, List
 from uuid import UUID
-from pydantic import BaseModel, Field
+from datetime import datetime
+from pydantic import BaseModel, Field, ConfigDict
 
 class ItemBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
@@ -16,11 +16,10 @@ class ItemUpdate(BaseModel):
 
 class ItemResponse(ItemBase):
     id: UUID
-    created_at: Optional[str]
-    updated_at: Optional[str]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaginatedItems(BaseModel):
     data: List[ItemResponse]
