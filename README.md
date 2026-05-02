@@ -36,7 +36,7 @@
 
 ### 1. Клонирование репозитория
 
-
+```bash
 git clone <your-repo-url>
 cd <project-folder>
 2. Создание файла .env
