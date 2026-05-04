@@ -5,3 +5,38 @@ services:
     build: .
     ports:
       - "4200:8000"
+<<<<<<< Updated upstream
+=======
+    env_file:
+      - .env
+    environment:
+      # DB_HOST и DB_PORT задаём явно, они не секретные
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+    depends_on:
+      postgres_db:
+        condition: service_healthy   # ждём, пока БД станет здоровой
+    volumes:
+      - .:/app   # (опционально) для удобства при разработке, можно убрать на чистой демонстрации
+
+  postgres_db:
+    image: postgres:16
+    restart: always
+    environment:
+      # Передаём переменные из .env в формате, который ждёт PostgreSQL
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - web_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  web_postgres_data:
+>>>>>>> Stashed changes
