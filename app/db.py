@@ -1,10 +1,8 @@
-# app/db.py
 import os
 import time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Переменные окружения (должны совпадать с docker-compose или .env)
 DB_USER = os.getenv("DB_USER", "student")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "student")
 DB_HOST = os.getenv("DB_HOST", "postgres")

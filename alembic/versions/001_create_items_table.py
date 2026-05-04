@@ -10,7 +10,6 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-# revision identifiers, used by Alembic.
 revision = '001'
 down_revision = None
 branch_labels = None
