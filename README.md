@@ -52,9 +52,6 @@ cd <project-folder>
 DB_USER=student
 DB_PASSWORD=student_secure_password
 DB_NAME=lab2
-DB_HOST=postgres
-DB_PORT=5432
-PORT=4200
 ```
 
 ---
